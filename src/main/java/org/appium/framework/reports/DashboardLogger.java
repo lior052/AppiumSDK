@@ -40,27 +40,60 @@ public class DashboardLogger {
         results.add(data);
     }
 
+//    public static void saveToFile() {
+//        try {
+//            Files.createDirectories(Paths.get(JSON_DIR));
+//            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
+//            String fileName = "run_" + timestamp + ".json";
+//            Path filePath = Paths.get(JSON_DIR + fileName);
+//
+//            try (FileWriter writer = new FileWriter(filePath.toFile())) {
+//                gson.toJson(results, writer);
+//            }
+//
+//            // Update index.json with list of all JSON files
+//            try (Stream<Path> files = Files.list(Paths.get(JSON_DIR))) {
+//                List<String> jsonFiles = files
+//                        .filter(f -> f.toString().endsWith(".json"))
+//                        .map(Path::getFileName)
+//                        .map(Path::toString)
+//                        .collect(Collectors.toList());
+//
+//                try (FileWriter indexWriter = new FileWriter(JSON_DIR + "index.json")) {
+//                    gson.toJson(jsonFiles, indexWriter);
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void saveToFile() {
         try {
             Files.createDirectories(Paths.get(JSON_DIR));
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
-            String fileName = "run_" + timestamp + ".json";
+            String fileName = "run_" + timestamp + ".js";
             Path filePath = Paths.get(JSON_DIR + fileName);
 
+            // Convert results to JS variable format
+            String jsVariable = "var testResults = " + gson.toJson(results) + ";";
+
             try (FileWriter writer = new FileWriter(filePath.toFile())) {
-                gson.toJson(results, writer);
+                writer.write(jsVariable);
             }
 
-            // Update index.json with list of all JSON files
+            // Optional: update index.js with list of JS files
             try (Stream<Path> files = Files.list(Paths.get(JSON_DIR))) {
-                List<String> jsonFiles = files
-                        .filter(f -> f.toString().endsWith(".json"))
+                List<String> jsFiles = files
+                        .filter(f -> f.toString().endsWith(".js"))
                         .map(Path::getFileName)
                         .map(Path::toString)
                         .collect(Collectors.toList());
 
-                try (FileWriter indexWriter = new FileWriter(JSON_DIR + "index.json")) {
-                    gson.toJson(jsonFiles, indexWriter);
+                String indexJs = "var availableRuns = " + gson.toJson(jsFiles) + ";";
+                try (FileWriter indexWriter = new FileWriter(JSON_DIR + "index.js")) {
+                    indexWriter.write(indexJs);
                 }
             }
 
@@ -68,6 +101,7 @@ public class DashboardLogger {
             e.printStackTrace();
         }
     }
+
 
     private static String getStatus(int status) {
         switch(status) {
