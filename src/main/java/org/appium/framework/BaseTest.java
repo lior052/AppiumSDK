@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
 
+//temp
 public abstract class BaseTest extends AppiumUtils {
 
     protected AppiumDriver driver;
