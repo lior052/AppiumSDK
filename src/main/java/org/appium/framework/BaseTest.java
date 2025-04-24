@@ -45,12 +45,19 @@ public abstract class BaseTest extends AppiumUtils {
     }
 
     public AppiumDriver getDriver() throws IOException {
+
+        if (TestContext.getDriver() != null) {
+            return TestContext.getDriver();
+        }
+
         if (driver == null) {
             System.out.println("Driver is null, initializing...");
             if (driverManager == null) {
                 driverManager = new DriverManager();
             }
             setDriver(platformName);
+            TestContext.setDriver(driver);
+            TestContext.setPlatformName(platformName);
         }
         return driver;
     }
