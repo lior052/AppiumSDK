@@ -27,8 +27,13 @@ public class AppiumUtils {
 
 
     protected AppiumDriverLocalService startAppiumServer(String ipAddress, int port) {
+        String appiumMainJS = System.getenv("APPIUM_MAIN") != null
+                ? System.getenv("APPIUM_MAIN")
+                : "/usr/lib/node_modules/appium/build/lib/main.js";
+
         service = new AppiumServiceBuilder()
-                .withAppiumJS(new File("//usr//local//lib//node_modules//appium//build//lib//main.js"))
+                //.withAppiumJS(new File("//usr//local//lib//node_modules//appium//build//lib//main.js"))
+                .withAppiumJS(new File(appiumMainJS))
                 .withIPAddress(ipAddress)
                 .usingPort(port).build();
         service.start();
